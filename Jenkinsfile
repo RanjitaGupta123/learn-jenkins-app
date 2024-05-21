@@ -22,5 +22,25 @@ pipeline {
                 '''
             }
         }
+         stage('test') {
+            agent {
+             docker {
+                image 'node:18-alpine'
+                reuseNode true
+            }
+            }
+            steps {
+                echo 'testing  the application'
+                sh '''
+                 test -f build/index.html
+                 npm test
+                '''
+            }
+        }
+    }
+    post {
+        always {
+            junit 'jest-results/junit.xml'
+        }
     }
 }
