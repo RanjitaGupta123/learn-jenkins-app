@@ -10,10 +10,15 @@ pipeline {
             }
             }
             steps {
-                echo 'Hello World'
+                echo 'Building the application'
                 sh '''
                  node --version 
                  npm --version
+                 ls -la
+                 npm ci
+                 npm run build
+                 ls -la
+
                 '''
             }
         }
