@@ -7,7 +7,7 @@ pipeline {
              docker {
                 image 'node:18-alpine'
                 reuseNode true
-            }
+             }
             }
             steps {
                 echo 'Building the application'
@@ -25,19 +25,19 @@ pipeline {
         stage('Tests') {
             parallel {
              stage('unit test') {
-            agent {
-             docker {
-                image 'node:18-alpine'
-                reuseNode true
-            }
-            }
-            steps {
-                echo 'testing  the application'
-                sh '''
-                 test -f build/index.html
-                 npm test
-                '''
-            }
+                agent {
+                    docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                    }
+                     }
+                steps {
+                    echo 'testing  the application'
+                    sh '''
+                    test -f build/index.html
+                    npm test
+                    '''
+                }
              post {
              always {
              junit 'jest-results/junit.xml'
@@ -61,7 +61,7 @@ pipeline {
                  npx playwright test --reporter=html
                 '''
             }
-        }
+        
         post {
         always {
             publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
@@ -70,5 +70,5 @@ pipeline {
             }
         }
     }
-   
+    }
 }
