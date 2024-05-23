@@ -78,9 +78,6 @@ pipeline {
                             reuseNode true
                         }
                     }
-                    environment {
-                        CI_ENVIRONMENT_URL = 'STAGING_URL_TO_BE_UPDATED'
-                    }
                     steps {
                         echo 'Deploying the application to staging'
                         sh '''
