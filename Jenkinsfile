@@ -65,7 +65,7 @@ pipeline {
                     } 
                     post {
                         always {
-                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright E2E HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright E2E Local  HTML Report', reportTitles: '', useWrapperFileDirectly: true])
                         }
                     }
                 }       
@@ -86,10 +86,35 @@ pipeline {
                     echo "Deploying to staging Site ID : $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
                     node_modules/.bin/netlify deploy --dir=build --json > staging-deploy-output.json
-                    node_modules/.bin/node-jq -r '.deploy_url' staging-deploy-output.json
+                    
                 '''
+                script{
+                    env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' staging-deploy-output.json", returnStdout: true)
+                }
             }
         }
+        stage('staging E2E') {
+                    agent {
+                        docker {
+                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            reuseNode true
+                        }
+                    }
+                    environment {
+                        CI_ENVIRONMENT_URL = "${env.STAGING_URL}"
+                    }
+                    steps {
+                        echo 'staging E2E testing'
+                        sh '''
+                        npx playwright test --reporter=html
+                        '''
+                    } 
+                    post {
+                        always {
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright staging HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                        }
+                    }
+        }       
         stage('Approval') {
             steps {
               echo 'seeking approval to proceed with production deployment'
