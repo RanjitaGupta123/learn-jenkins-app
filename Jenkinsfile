@@ -79,7 +79,7 @@ pipeline {
                 }
             }
             steps {
-                echo 'Deploying the application'
+                echo 'Deploying the application with small changes'
                 sh '''
                     npm install netlify-cli
                     node_modules/.bin/netlify --version
