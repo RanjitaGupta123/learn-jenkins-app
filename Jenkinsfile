@@ -65,7 +65,7 @@ pipeline {
                     } 
                     post {
                         always {
-                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright E2E HTML Report', reportTitles: '', useWrapperFileDirectly: true])
                         }
                     }
                 }       
@@ -89,5 +89,27 @@ pipeline {
                 '''
             }
         } 
+        stage('Production E2E') {
+                    agent {
+                        docker {
+                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            reuseNode true
+                        }
+                    }
+                    environment {
+                        CI_ENVIRONMENT_URL = 'https://spiffy-begonia-d7ae97.netlify.app'
+                    }
+                    steps {
+                        echo 'Production E2E testing'
+                        sh '''
+                        npx playwright test --reporter=html
+                        '''
+                    } 
+                    post {
+                        always {
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright production HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                        }
+                    }
+        }       
     }
 }
