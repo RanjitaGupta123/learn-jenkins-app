@@ -87,7 +87,7 @@ pipeline {
                         node_modules/.bin/netlify status
                         node_modules/.bin/netlify deploy --dir=build --json > staging-deploy-output.json
                         echo 'testing testing'
-                        CI_ENVIRONMENT_URL = $(node_modules/.bin/node-jq -r '.deploy_url' staging-deploy-output.json)
+                        CI_ENVIRONMENT_URL=$(node_modules/.bin/node-jq -r '.deploy_url' staging-deploy-output.json)
                         echo  "$CI_ENVIRONMENT_URL"
                         echo 'staging E2E testing' 
                         sleep 10
