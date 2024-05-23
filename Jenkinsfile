@@ -71,29 +71,7 @@ pipeline {
                 }       
             }
         }    
-        stage('Deploy staging') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps {
-                echo 'Deploying the application to staging'
-                sh '''
-                    npm install netlify-cli node-jq
-                    node_modules/.bin/netlify --version
-                    echo "Deploying to staging Site ID : $NETLIFY_SITE_ID"
-                    node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --json > staging-deploy-output.json
-                    
-                '''
-                script{
-                    env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' staging-deploy-output.json", returnStdout: true)
-                }
-            }
-        }
-        stage('staging E2E') {
+        stage('staging Deploy and E2E') {
                     agent {
                         docker {
                             image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
@@ -101,12 +79,19 @@ pipeline {
                         }
                     }
                     environment {
-                        CI_ENVIRONMENT_URL = "${env.STAGING_URL}"
+                        CI_ENVIRONMENT_URL = "STAGING_URL_TO_BE_UPDATED"
                     }
                     steps {
-                        echo 'staging E2E testing'
+                        echo 'Deploying the application to staging'
                         sh '''
-                        npx playwright test --reporter=html
+                        npm install netlify-cli node-jq
+                        node_modules/.bin/netlify --version
+                        echo "Deploying to staging Site ID : $NETLIFY_SITE_ID"
+                        node_modules/.bin/netlify status
+                        node_modules/.bin/netlify deploy --dir=build --json > staging-deploy-output.json
+                        CI_ENVIRONMENT_URL = $(node_modules/.bin/node-jq -r '.deploy_url' staging-deploy-output.json) 
+                        echo 'staging E2E testing' 
+                        npx playwright test --reporter=html                  
                         '''
                     } 
                     post {
@@ -124,25 +109,7 @@ pipeline {
              
             }           
         }
-        stage('Deploy production') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps {
-                echo 'Deploying the application in production'
-                sh '''
-                    npm install netlify-cli
-                    node_modules/.bin/netlify --version
-                    echo "Deploying to production Site ID : $NETLIFY_SITE_ID"
-                    node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --prod
-                '''
-            }
-        } 
-        stage('Production E2E') {
+        stage('Production Deploy and E2E') {
                     agent {
                         docker {
                             image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
@@ -153,10 +120,16 @@ pipeline {
                         CI_ENVIRONMENT_URL = 'https://spiffy-begonia-d7ae97.netlify.app'
                     }
                     steps {
-                        echo 'Production E2E testing'
-                        sh '''
-                        npx playwright test --reporter=html
-                        '''
+                          echo 'Deploying the application in production'
+                          sh '''
+                          npm install netlify-cli
+                          node_modules/.bin/netlify --version
+                          echo "Deploying to production Site ID : $NETLIFY_SITE_ID"
+                          node_modules/.bin/netlify status
+                          node_modules/.bin/netlify deploy --dir=build --prod
+                          echo 'Production E2E testing'
+                          npx playwright test --reporter=html
+                          '''
                     } 
                     post {
                         always {
