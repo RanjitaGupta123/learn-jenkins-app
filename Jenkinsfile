@@ -7,6 +7,10 @@ pipeline {
     }
 
     stages {
+        stage(docker) {
+            docker build -t playwright_test .
+        }
+        
         stage('Build') {
             agent {
                 docker {
@@ -75,7 +79,7 @@ pipeline {
         stage('staging Deploy and E2E') {
                     agent {
                         docker {
-                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            image 'playwright_test'
                             reuseNode true
                         }
                     }
@@ -85,13 +89,12 @@ pipeline {
                     steps {
                         echo 'Deploying the application to staging'
                         sh '''
-                        npm install netlify-cli node-jq
-                        node_modules/.bin/netlify --version
+                        netlify --version
                         echo "Deploying to staging Site ID : $NETLIFY_SITE_ID"
-                        node_modules/.bin/netlify status
-                        node_modules/.bin/netlify deploy --dir=build --json > staging-deploy-output.json
+                        netlify status
+                        netlify deploy --dir=build --json > staging-deploy-output.json
                         echo 'testing testing'
-                        CI_ENVIRONMENT_URL=$(node_modules/.bin/node-jq -r '.deploy_url' staging-deploy-output.json)
+                        CI_ENVIRONMENT_URL=$(node-jq -r '.deploy_url' staging-deploy-output.json)
                         echo  "$CI_ENVIRONMENT_URL"
                         echo 'staging E2E testing' 
                         sleep 10
@@ -107,7 +110,7 @@ pipeline {
         stage('Production Deploy and E2E') {
                     agent {
                         docker {
-                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            image 'playwright_test'
                             reuseNode true
                         }
                     }
@@ -117,11 +120,10 @@ pipeline {
                     steps {
                           echo 'Deploying the application in production'
                           sh '''
-                          npm install netlify-cli
-                          node_modules/.bin/netlify --version
+                          netlify --version
                           echo "Deploying to production Site ID : $NETLIFY_SITE_ID"
-                          node_modules/.bin/netlify status
-                          node_modules/.bin/netlify deploy --dir=build --prod
+                          netlify status
+                          netlify deploy --dir=build --prod
                           echo 'Production E2E testing'
                           npx playwright test --reporter=html
                           '''
