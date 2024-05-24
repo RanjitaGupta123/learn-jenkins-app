@@ -7,10 +7,11 @@ pipeline {
     }
 
     stages {
-        stage(docker) {
-            docker build -t playwright_test .
-        }
-        
+        stage('docker') {
+            steps {
+                docker build -t playwright_test .
+            }   
+        }      
         stage('Build') {
             agent {
                 docker {
