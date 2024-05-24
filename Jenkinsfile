@@ -104,15 +104,6 @@ pipeline {
                         }
                     }
         }       
-        stage('Approval') {
-            steps {
-              echo 'seeking approval to proceed with production deployment'
-              timeout(time: 2, unit: 'MINUTES') {
-                 input message: 'Ready to Deploy', ok: 'Yes, I am sure I want to deploy'
-              }
-             
-            }           
-        }
         stage('Production Deploy and E2E') {
                     agent {
                         docker {
