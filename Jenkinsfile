@@ -6,12 +6,7 @@ pipeline {
         REACT_APP_VERSION = "1.2.$BUILD_ID"
     }
 
-    stages {
-        stage('docker') {
-            steps {
-                sh 'docker build -t playwright_test .'
-            }   
-        }      
+    stages {   
         stage('Build') {
             agent {
                 docker {
@@ -94,7 +89,7 @@ pipeline {
                         netlify status
                         netlify deploy --dir=build --json > staging-deploy-output.json
                         echo 'testing testing'
-                        CI_ENVIRONMENT_URL=$(node-jq -r '.deploy_url' staging-deploy-output.json)
+                        CI_ENVIRONMENT_URL=$(jq -r '.deploy_url' staging-deploy-output.json)
                         echo  "$CI_ENVIRONMENT_URL"
                         echo 'staging E2E testing' 
                         sleep 10
