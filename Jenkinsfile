@@ -30,8 +30,8 @@ pipeline {
             steps {
                 echo 'Unit test phase'
                 sh '''
-                test -f .build/index.html
-                npm test
+                    test -f build/index.html
+                    npm test
                 '''
             }
         }
