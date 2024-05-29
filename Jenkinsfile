@@ -1,7 +1,10 @@
 pipeline {
     agent any
+    environment {
+        REACT_APP_VERSION = '1.2.3'
+    }
     stages {
-        stage('Build') {
+       /* stage('Build') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -19,7 +22,7 @@ pipeline {
                     ls -la
                 '''
             }
-        }
+        } */
         stage('Unit Test') {
             agent {
                 docker {
@@ -34,6 +37,20 @@ pipeline {
                     npm test
                 '''
             }
+        }
+        stage('E2E') {
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.40.0-jammy'
+                    reuseNode true
+                }
+            }
+            sh '''
+              npm install serve
+              node_modules/.bin/serve s build &
+              sleep 10
+              npx playwright test
+            '''
         }
     }
     post {
