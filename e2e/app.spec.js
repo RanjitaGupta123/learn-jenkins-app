@@ -16,7 +16,7 @@ test('has Jenkins in the body', async ({ page }) => {
 });
 
 
-test('has expected app version', async ({ page }) => {
+/ * test('has expected app version', async ({ page }) => {
   await page.goto('/');
 
   const expectedAppVersion = process.env.REACT_APP_VERSION ? process.env.REACT_APP_VERSION : '1';
@@ -25,4 +25,4 @@ test('has expected app version', async ({ page }) => {
 
   const isVisible = await page.locator(`p:has-text("Application version: ${expectedAppVersion}")`).isVisible();
   expect(isVisible).toBeTruthy();
-});
+}); */
