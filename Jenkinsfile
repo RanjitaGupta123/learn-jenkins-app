@@ -3,7 +3,7 @@ pipeline {
     environment {
         REACT_APP_VERSION = '1.2.3'
         AZURE_CONFIG_DIR = "${env.WORKSPACE}/.azure"
-        AZURE_STORAGE_ACCOUNT_NAME = 'learningjenkins'
+        AZURE_STORAGE_ACCOUNT = 'learningjenkins'
         AZURE_CONTAINER_NAME = 'website'
         AZURE_STORAGE_SAS_TOKEN = credentials('storage_account_token')
     }
@@ -19,7 +19,8 @@ pipeline {
             steps {
                 sh '''
                   az version
-                  az storage blob list --account-name $AZURE_STORAGE_ACCOUNT_NAME --container-name $AZURE_CONTAINER_NAME
+                  # az storage blob list --account-name $AZURE_STORAGE_ACCOUNT_NAME --container-name $AZURE_CONTAINER_NAME
+                  az storage blob list --container-name $AZURE_CONTAINER_NAME
                   '''
                     
                   }
