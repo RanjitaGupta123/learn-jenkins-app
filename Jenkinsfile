@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         REACT_APP_VERSION = '1.2.3'
+        AZURE_CONFIG_DIR = "${env.WORKSPACE}/.azure"
     }
     stages {
 
