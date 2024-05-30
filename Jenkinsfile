@@ -23,6 +23,14 @@ pipeline {
 
                     // Use the Azure CLI to list blob files
                     def blobListCommand = "az storage blob list --account-name $azureStorageAccountName --container-name $azureStorageContainerName --output json"
+                     def blobListOutput = sh(script: blobListCommand, returnStdout: true).trim()
+
+                    // Parse the JSON output to extract blob names
+                    def blobNames = new groovy.json.JsonSlurper().parseText(blobListOutput)
+                        .collect { it.name }
+                        .join('\n')
+
+                    echo "Blob names in container '$azureStorageContainerName':\n$blobNames"
                   }
 
             }
