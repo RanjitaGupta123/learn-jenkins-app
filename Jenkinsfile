@@ -16,8 +16,15 @@ pipeline {
             steps {
                 sh '''
                   az version
-                  az storage container list
-                '''
+                  '''
+                  script {
+                    def azureStorageAccountName = 'learningjenkins'
+                    def azureStorageContainerName = 'website'
+
+                    // Use the Azure CLI to list blob files
+                    def blobListCommand = "az storage blob list --account-name $azureStorageAccountName --container-name $azureStorageContainerName --output json"
+                  }
+
             }
         }
        /* stage('Build') {
