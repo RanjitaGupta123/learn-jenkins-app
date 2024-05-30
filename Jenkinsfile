@@ -16,6 +16,7 @@ pipeline {
             steps {
                 sh '''
                   az version
+                  az storage container list
                 '''
             }
         }
