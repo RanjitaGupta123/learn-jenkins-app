@@ -9,7 +9,6 @@ pipeline {
             agent {
                 docker {
                     image 'mcr.microsoft.com/azure-cli'
-                    reuseNode true
                 }
             }
             steps {
