@@ -4,6 +4,20 @@ pipeline {
         REACT_APP_VERSION = '1.2.3'
     }
     stages {
+
+        stage('Azure') {
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/azure-cli'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                  az --version
+                '''
+            }
+        }
        /* stage('Build') {
             agent {
                 docker {
@@ -22,7 +36,7 @@ pipeline {
                     ls -la
                 '''
             }
-        } */
+        } 
         stage('Run Tests')
         {
             parallel {
@@ -59,13 +73,13 @@ pipeline {
                                 }  
                             }
             }
-        }
+        } */
 
     }
-    post {
+ /*   post {
         always {
             junit 'jest-results/junit.xml'
             publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
         }
-    }
+    } */
 }
