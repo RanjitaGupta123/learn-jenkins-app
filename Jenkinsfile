@@ -9,6 +9,7 @@ pipeline {
             agent {
                 docker {
                     image 'mcr.microsoft.com/azure-cli'
+                    args "--entrypoint=''"
                 }
             }
             steps {
