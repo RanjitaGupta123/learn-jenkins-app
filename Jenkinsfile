@@ -20,6 +20,9 @@ pipeline {
                 sh '''
                   az version
                   # az storage blob list --account-name $AZURE_STORAGE_ACCOUNT_NAME --container-name $AZURE_CONTAINER_NAME
+                  echo "Hello Azure!" > index.html
+                  az storage blob upload --container-name $AZURE_CONTAINER_NAME --name index.html --type block --source index.html 
+
                   az storage blob list --container-name $AZURE_CONTAINER_NAME
                   '''
                     
