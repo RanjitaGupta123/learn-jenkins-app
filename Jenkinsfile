@@ -3,6 +3,9 @@ pipeline {
     environment {
         REACT_APP_VERSION = '1.2.3'
         AZURE_CONFIG_DIR = "${env.WORKSPACE}/.azure"
+        azureStorageAccountName = 'learningjenkins'
+        azureStorageContainerName = 'website'
+        sasToken = 'sp=racwdl&st=2024-05-30T13:34:51Z&se=2024-06-02T21:34:51Z&spr=https&sv=2022-11-02&sr=c&sig=rcObuQT7v4ztk3AZpguZWVjM90I9kPaxvvN%2FdAJ9vzQ%3D'
     }
     stages {
 
@@ -16,16 +19,11 @@ pipeline {
             steps {
                 sh '''
                   az version
+                  az storage blob list --account-name $azureStorageAccountName --container-name $azureStorageContainerName --sas-token $sasToken
                   '''
-                  script {
-                    def azureStorageAccountName = 'learningjenkins'
-                    def azureStorageContainerName = 'website'
-                    def sasToken = 'sp=racwdl&st=2024-05-30T13:34:51Z&se=2024-06-02T21:34:51Z&spr=https&sv=2022-11-02&sr=c&sig=rcObuQT7v4ztk3AZpguZWVjM90I9kPaxvvN%2FdAJ9vzQ%3D'
-
-                    // Use the Azure CLI to list blob files
-                    def blobListCommand = "az storage blob list --account-name $azureStorageAccountName --container-name $azureStorageContainerName --sas-token $sasToken"
-                    echo "$blobListCommand"
+                    
                   }
+                  
 
             }
         }
