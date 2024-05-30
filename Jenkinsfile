@@ -5,7 +5,7 @@ pipeline {
         AZURE_CONFIG_DIR = "${env.WORKSPACE}/.azure"
         AZURE_STORAGE_ACCOUNT_NAME = 'learningjenkins'
         AZURE_CONTAINER_NAME = 'website'
-        SAS_TOKEN = credentials('storage_account_token')
+        AZURE_STORAGE_SAS_TOKEN = credentials('storage_account_token')
     }
     stages {
 
@@ -19,7 +19,7 @@ pipeline {
             steps {
                 sh '''
                   az version
-                  az storage blob list --account-name $AZURE_STORAGE_ACCOUNT_NAME --container-name $AZURE_CONTAINER_NAME --sas-token $SAS_TOKEN
+                  az storage blob list --account-name $AZURE_STORAGE_ACCOUNT_NAME --container-name $AZURE_CONTAINER_NAME
                   '''
                     
                   }
