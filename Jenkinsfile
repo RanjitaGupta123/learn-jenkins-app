@@ -3,9 +3,9 @@ pipeline {
     environment {
         REACT_APP_VERSION = '1.2.3'
         AZURE_CONFIG_DIR = "${env.WORKSPACE}/.azure"
-        azureStorageAccountName = 'learningjenkins'
-        azureStorageContainerName = 'website'
-        sasToken = 'sp=racwdl&st=2024-05-30T13:34:51Z&se=2024-06-02T21:34:51Z&spr=https&sv=2022-11-02&sr=c&sig=rcObuQT7v4ztk3AZpguZWVjM90I9kPaxvvN%2FdAJ9vzQ%3D'
+        AZURE_STORAGE_ACCOUNT_NAME = 'learningjenkins'
+        AZURE_CONTAINER_NAME = 'website'
+        SAS_TOKEN = 'sp=racwdl&st=2024-05-30T13:34:51Z&se=2024-06-02T21:34:51Z&spr=https&sv=2022-11-02&sr=c&sig=rcObuQT7v4ztk3AZpguZWVjM90I9kPaxvvN%2FdAJ9vzQ%3D'
     }
     stages {
 
@@ -19,14 +19,14 @@ pipeline {
             steps {
                 sh '''
                   az version
-                  az storage blob list --account-name $azureStorageAccountName --container-name $azureStorageContainerName --sas-token $sasToken
+                  az storage blob list --account-name $AZURE_STORAGE_ACCOUNT_NAME --container-name $AZURE_CONTAINER_NAME --sas-token $SAS_TOKEN
                   '''
                     
                   }
                   
 
-            }
         }
+    }
        /* stage('Build') {
             agent {
                 docker {
