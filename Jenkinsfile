@@ -5,7 +5,7 @@ pipeline {
         AZURE_CONFIG_DIR = "${env.WORKSPACE}/.azure"
         AZURE_STORAGE_ACCOUNT_NAME = 'learningjenkins'
         AZURE_CONTAINER_NAME = 'website'
-        SAS_TOKEN = 'sp=racwdl&st=2024-05-30T13:34:51Z&se=2024-06-02T21:34:51Z&spr=https&sv=2022-11-02&sr=c&sig=rcObuQT7v4ztk3AZpguZWVjM90I9kPaxvvN%2FdAJ9vzQ%3D'
+        SAS_TOKEN = credentials('storage_account_token')
     }
     stages {
 
