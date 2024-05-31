@@ -19,13 +19,15 @@ pipeline {
             steps {
                 sh '''
                   az version
+                  '''
+                  script {
                   # az storage blob upload --file build/index.html --container-name $AZURE_CONTAINER_NAME --name index.html --overwrite
                   # az storage blob list --container-name $AZURE_CONTAINER_NAME
                   wget -O azcopy.tar.gz https://aka.ms/downloadazcopylinux64
                   tar -xf azcopy.tar.gz
-                  ./install.sh
+                  sudo ./install.sh
                   azcopy --version
-                  '''                   
+                                    
                   }
                   
 
