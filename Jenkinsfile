@@ -21,9 +21,14 @@ pipeline {
                 az version
                 # az storage blob upload --file build/index.html --container-name $AZURE_CONTAINER_NAME --name index.html --overwrite
                 # az     
-                  wget -O azcopy.tar.gz https://aka.ms/downloadazcopylinux64
-                  tar -xf azcopy.tar.gz
-                  ./azcopy sync "build" "https://$AZURE_STORAGE_ACCOUNT.blob.core.windows.net/$AZURE_CONTAINER_NAME/$AZURE_STORAGE_SAS_TOKEN" --recursive
+                # wget -O azcopy.tar.gz https://aka.ms/downloadazcopylinux64
+                # tar -xf azcopy.tar.gz
+                #./azcopy sync "build" "https://$AZURE_STORAGE_ACCOUNT.blob.core.windows.net/$AZURE_CONTAINER_NAME/$AZURE_STORAGE_SAS_TOKEN" --recursive
+                echo "Setup AzCopy.."
+                mkdir -p tmp
+                cd tmp
+                wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux && tar -xf azcopy_v10.tar.gz --strip-components=1
+                ./azcopy sync "build" "https://$AZURE_STORAGE_ACCOUNT.blob.core.windows.net/$AZURE_CONTAINER_NAME/$AZURE_STORAGE_SAS_TOKEN" --recursive
                 '''
             }
         }
