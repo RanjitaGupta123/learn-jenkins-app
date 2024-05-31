@@ -19,7 +19,7 @@ pipeline {
             steps {
                 sh '''
                   az version
-                  az storage blob upload --file build/index.html --container-name $AZURE_CONTAINER_NAME --name index.html
+                  az storage blob upload --file build/index.html --container-name $AZURE_CONTAINER_NAME --name index.html --overwrite
                   az storage blob list --container-name $AZURE_CONTAINER_NAME
                   '''                   
                   }
