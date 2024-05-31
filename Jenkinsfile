@@ -21,12 +21,9 @@ pipeline {
                   az version
                   # az storage blob upload --file build/index.html --container-name $AZURE_CONTAINER_NAME --name index.html --overwrite
                   # az storage blob list --container-name $AZURE_CONTAINER_NAME
-                  echo "Setup AzCopy.."
-                  mkdir -p tmp
-                  cd tmp
-                  wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux && tar -xf azcopy_v10.tar.gz --strip-components=1
-                  #cp ./azcopy /usr/bin/
-                  #cd ..
+                  wget -O azcopy.tar.gz https://aka.ms/downloadazcopylinux64
+                  tar -xf azcopy.tar.gz
+                  sudo ./install.sh
                   azcopy --version
                   '''                   
                   }
