@@ -14,6 +14,7 @@ pipeline {
                 docker {
                     image 'mcr.microsoft.com/azure-cli'
                     reuseNode true
+                    args '-u root'
                 }
             }
             steps {
@@ -24,10 +25,8 @@ pipeline {
                 # wget -O azcopy.tar.gz https://aka.ms/downloadazcopylinux64
                 # tar -xf azcopy.tar.gz
                 #./azcopy sync "build" "https://$AZURE_STORAGE_ACCOUNT.blob.core.windows.net/$AZURE_CONTAINER_NAME/$AZURE_STORAGE_SAS_TOKEN" --recursive
-                echo "Setup AzCopy.."
-                mkdir -p tmp
-                cd tmp
-                wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux && tar -xf azcopy_v10.tar.gz --strip-components=1
+                wget -O azcopy.tar.gz https://aka.ms/downloadazcopylinux64
+                tar -xf azcopy.tar.gz
                 ./azcopy sync "build" "https://$AZURE_STORAGE_ACCOUNT.blob.core.windows.net/$AZURE_CONTAINER_NAME/$AZURE_STORAGE_SAS_TOKEN" --recursive
                 '''
             }
