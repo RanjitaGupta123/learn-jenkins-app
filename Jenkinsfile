@@ -3,8 +3,8 @@ pipeline {
     environment {
         REACT_APP_VERSION = '1.2.3'
         AZURE_CONFIG_DIR = "${env.WORKSPACE}/.azure"
-        AZURE_STORAGE_ACCOUNT = 'learningjenkins'
-        AZURE_CONTAINER_NAME = 'website'
+        AZURE_STORAGE_ACCOUNT = 'learnjenkins'
+        AZURE_CONTAINER_NAME = '$web'
         AZURE_STORAGE_SAS_TOKEN = credentials('storage_account_token')
     }
     stages {
@@ -19,13 +19,9 @@ pipeline {
             steps {
                 sh '''
                   az version
-                  # az storage blob list --account-name $AZURE_STORAGE_ACCOUNT_NAME --container-name $AZURE_CONTAINER_NAME
-                  echo "Hello Azure!" > index.html
-                  az storage blob upload --file index.html --container-name $AZURE_CONTAINER_NAME --name index.html
-
+                  az storage blob upload --file build/index.html --container-name $AZURE_CONTAINER_NAME --name index.html
                   az storage blob list --container-name $AZURE_CONTAINER_NAME
-                  '''
-                    
+                  '''                   
                   }
                   
 
