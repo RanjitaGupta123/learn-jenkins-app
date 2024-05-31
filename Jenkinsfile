@@ -9,30 +9,7 @@ pipeline {
     }
     stages {
 
-        stage('Azure') {
-            agent {
-                docker {
-                    image 'peterdavehello/azcopy:10.24'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh '''
-                # az version
-                azcopy --version
-                # az storage blob upload --file build/index.html --container-name $AZURE_CONTAINER_NAME --name index.html --overwrite
-                # az     
-                # wget -O azcopy.tar.gz https://aka.ms/downloadazcopylinux64
-                # tar -xf azcopy.tar.gz
-                #./azcopy sync "build" "https://$AZURE_STORAGE_ACCOUNT.blob.core.windows.net/$AZURE_CONTAINER_NAME/$AZURE_STORAGE_SAS_TOKEN" --recursive
-                # wget -O azcopy.tar.gz https://aka.ms/downloadazcopylinux64
-                # tar -xf azcopy.tar.gz
-                #./azcopy sync "build" "https://$AZURE_STORAGE_ACCOUNT.blob.core.windows.net/$AZURE_CONTAINER_NAME/$AZURE_STORAGE_SAS_TOKEN" --recursive
-                '''
-            }
-        }
-
-       /* stage('Build') {
+        stage('Build') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -87,13 +64,28 @@ pipeline {
                                 }  
                             }
             }
-        } */
+        } 
+
+         stage('Azure Deploy') {
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/azure-cli'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                az version
+                az storage blob upload --file build/index.html --container-name $AZURE_CONTAINER_NAME --name index.html --overwrite
+                '''
+            }
+        }
 
     }
- /*   post {
+    post {
         always {
             junit 'jest-results/junit.xml'
             publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
         }
-    } */
+    } 
 }
