@@ -9,12 +9,17 @@ pipeline {
     }
     stages {
 
+        stage('Docker'){
+            steps{
+                sh 'docker build -t my-azcopyfile .'
+            }
+        }
+
         stage('Azure') {
             agent {
                 docker {
-                    image 'mcr.microsoft.com/azure-cli'
+                    image 'my-azcopyfile'
                     reuseNode true
-                    args '-u root'
                 }
             }
             steps {
@@ -25,9 +30,9 @@ pipeline {
                 # wget -O azcopy.tar.gz https://aka.ms/downloadazcopylinux64
                 # tar -xf azcopy.tar.gz
                 #./azcopy sync "build" "https://$AZURE_STORAGE_ACCOUNT.blob.core.windows.net/$AZURE_CONTAINER_NAME/$AZURE_STORAGE_SAS_TOKEN" --recursive
-                wget -O azcopy.tar.gz https://aka.ms/downloadazcopylinux64
-                tar -xf azcopy.tar.gz
-                ./azcopy sync "build" "https://$AZURE_STORAGE_ACCOUNT.blob.core.windows.net/$AZURE_CONTAINER_NAME/$AZURE_STORAGE_SAS_TOKEN" --recursive
+                # wget -O azcopy.tar.gz https://aka.ms/downloadazcopylinux64
+                # tar -xf azcopy.tar.gz
+                #./azcopy sync "build" "https://$AZURE_STORAGE_ACCOUNT.blob.core.windows.net/$AZURE_CONTAINER_NAME/$AZURE_STORAGE_SAS_TOKEN" --recursive
                 '''
             }
         }
