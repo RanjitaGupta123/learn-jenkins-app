@@ -23,7 +23,7 @@ pipeline {
                 # az     
                   wget -O azcopy.tar.gz https://aka.ms/downloadazcopylinux64
                   tar -xf azcopy.tar.gz
-                  azcopy sync "build" "https://$AZURE_STORAGE_ACCOUNT.blob.core.windows.net/$AZURE_CONTAINER_NAME/$AZURE_STORAGE_SAS_TOKEN" --recursive
+                  ./azcopy sync "build" "https://$AZURE_STORAGE_ACCOUNT.blob.core.windows.net/$AZURE_CONTAINER_NAME/$AZURE_STORAGE_SAS_TOKEN" --recursive
                 '''
             }
         }
