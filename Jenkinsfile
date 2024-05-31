@@ -9,16 +9,10 @@ pipeline {
     }
     stages {
 
-        stage('Docker'){
-            steps{
-                sh 'docker build -t my-azcopyfile .'
-            }
-        }
-
         stage('Azure') {
             agent {
                 docker {
-                    image 'my-azcopyfile'
+                    image 'peterdavehello/azcopy:10.24'
                     reuseNode true
                 }
             }
